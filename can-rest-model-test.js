@@ -3,9 +3,6 @@ var fixture = require("can-fixture");
 var DefineMap = require("can-define/map/map");
 var DefineList = require("can-define/list/list");
 var restModel = require("./can-rest-model");
-var GLOBAL = require("can-globals/global/global");
-//var stealClone = require("steal-clone");
-var QueryLogic = require("can-query-logic");
 var canReflect = require("can-reflect");
 
 QUnit.module("can-realtime-rest-model");
@@ -38,7 +35,7 @@ QUnit.test("CRUD basics", 10, function(assert){
         "#": Todo
     });
 
-    var connection = restModel({
+    restModel({
         Map: Todo,
         List: TodoList,
         url: "/api/todos/{_id}"
@@ -47,7 +44,7 @@ QUnit.test("CRUD basics", 10, function(assert){
 
     fixture("GET /api/todos", (function(){
         var count = 0;
-        return function(req, res) {
+        return function(req) {
 
             if(count++ === 0) {
                 QUnit.deepEqual(req.data, {foo:"bar", filter: "zed"});

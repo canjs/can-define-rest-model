@@ -76,7 +76,7 @@ restModel({
     destroyData: "DELETE /services/todo/{id}"
   }
   ```
-
+- [can-connect/data/url/url.ajax] - Specify a method to use to make requests. [can-ajax] is used by default.  But jQuery's `.ajax` method can be passed.
 - [can-connect/data/parse/parse.parseInstanceProp] - Specify the property to find the data that represents an instance item.
 - [can-connect/data/parse/parse.parseInstanceData] - Returns the properties that should be used to
   [can-connect/constructor/constructor.hydrateInstance make an instance]
