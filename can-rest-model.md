@@ -83,10 +83,12 @@ restModel({
   given the results of [can-connect/connection.getData], [can-connect/connection.createData],
   [can-connect/connection.updateData],
   and [can-connect/connection.destroyData].
-- [can-connect/data/parse/parse.parseListProp]
-- [can-connect/data/parse/parse.parseListData]
+- [can-connect/data/parse/parse.parseListProp] Specify the property to find the list data within a `getList` response.
+- [can-connect/data/parse/parse.parseListData] Return the correctly formatted data for a `getList` response.
 - [can-connect/base/base.queryLogic] - Specify the identity properties of the
   type. This is built automatically from the `Map` if [can-define/map/map] is used.
+
+@return {connection} foo
 
 @body
 
