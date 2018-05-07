@@ -34,7 +34,7 @@ restModel({
 });
 ```
 
-`restModel` mixins in the following behaviors:
+`restModel` mixes in the following behaviors:
 
 - [can-connect/constructor/constructor]
 - [can-connect/can/map/map]
@@ -142,7 +142,7 @@ is the easiest to configure.
 
 #### Nested data type or data types with relationships
 
-Sometimes your data might include nested data and/or related data. For example, if you  
+Sometimes your data might include nested data and/or related data. For example, if you
 get `todo` 5's data at `/api/todos/5` and it returns a nested `assignedTo` as follows:
 
 ```js
