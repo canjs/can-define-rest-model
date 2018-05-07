@@ -34,7 +34,7 @@ restModel({
 });
 ```
 
-`restModel` mixins-in the following behaviors:
+`restModel` mixins in the following behaviors:
 
 - [can-connect/constructor/constructor]
 - [can-connect/can/map/map]
@@ -69,14 +69,14 @@ restModel({
 
   ```js
   url: {
-    getListData: "GET /services/todos",
-    getData: "GET /services/todo/{id}",
-    createData: "POST /services/todo",
-    updateData: "PUT /services/todo/{id}",
-    destroyData: "DELETE /services/todo/{id}"
+    getListData: "GET /api/todos/find",
+    getData: "GET /api/todo/get/{id}",
+    createData: "POST /api/todo/create",
+    updateData: "POST /api/todo/update?id={id}",
+    destroyData: "POST /api/todo/delete?id={id}"
   }
   ```
-- [can-connect/data/url/url.ajax] - Specify a method to use to make requests. [can-ajax] is used by default.  But jQuery's `.ajax` method can be passed.
+- [can-connect/data/url/url.ajax] - Specify a method to use to make requests; [can-ajax] is used by default, but jQuery's `.ajax` method can be passed.
 - [can-connect/data/parse/parse.parseInstanceProp] - Specify the property to find the data that represents an instance item.
 - [can-connect/data/parse/parse.parseInstanceData] - Returns the properties that should be used to
   [can-connect/constructor/constructor.hydrateInstance make an instance]
@@ -88,7 +88,7 @@ restModel({
 - [can-connect/base/base.queryLogic] - Specify the identity properties of the
   type. This is built automatically from the `Map` if [can-define/map/map] is used.
 
-@return {connection} foo
+@return {connection} Returns a connection object.
 
 @body
 
@@ -102,7 +102,7 @@ layer. To use `restModel`, you:
 - Use the types to manipulate service data
 
 `restModel` is the most
-basic built-in CanJS model layer. Checkout [can-realtime-rest-model] for models that
+basic built-in CanJS model layer. Check out [can-realtime-rest-model] for models that
 are able to:
 
 - Add and remove data from lists automatically
@@ -176,10 +176,10 @@ const Todo = DefineMap.extend("Todo",{
 });
 ```
 
-Checkout the [can-connect/can/ref/ref] behavior for additional relationship features.
+Check out the [can-connect/can/ref/ref] behavior for additional relationship features.
 
 If you are using [can-define/map/map] and your server might add properties that can't be defined
-before hand, make sure to unseal your todo type:
+beforehand, make sure to unseal your todo type:
 
 ```js
 const Todo = DefineMap.extend("Todo",
@@ -281,12 +281,79 @@ const Todo = DefineMap.extend("Todo",{
 });
 ```
 
+#### The identity property
 
+If you specifying the identity property on nested data types, `restModel` will be able to
+intelligently merge data.  For example, say a `Todo` and its nested `User` type are defined as follows:
+
+```js
+const User = DefineMap.extend("User",{
+    id: "number",
+    name: "string"
+});
+
+const Todo = DefineMap.extend("Todo",{
+    id: {identity: true},
+    name: "string",
+    complete: "boolean",
+    assignedTo: [User]
+});
+```
+
+If a todo like the following:
+
+```js
+var justin = new User({id: 20, name: "Justin"}),
+    ramiya = new User({id: 21, name: "Ramiya"});
+
+var user = new User({
+    id: 1,
+    name: "mow lawn",
+    complete: false,
+    assignedTo: [justin, ramiya]
+});
+```
+
+is updated with data like:
+
+```js
+{
+    id: 1,
+    name: "mow lawn",
+    complete: true,
+    assignedTo: [{
+        id: 21, name: "Ramiya Meyer"
+    }]
+}
+```
+
+__Without__ specifying the identity property of `User`, the `justin` instance's `id` and `name` will be updated:
+
+```js
+justin.id //-> 21
+justin.name //-> "Ramiya Meyer"
+```
+
+However, if the `User` object's `identity` property is specified as follows:
+
+```js
+const User = DefineMap.extend("User",{
+    id: "number",
+    name: "string"
+});
+```
+
+When the update happens, the `ramiya` instance will be updated correctly:
+
+```js
+ramiya.id //-> 21
+ramiya.name //-> "Ramiya Meyer"
+```
 
 
 ### Configure the connection
 
-Once you've got your types defined, the next step is to configure
+Once you have your types defined, the next step is to configure
 your connection to make requests to your service layer and create
 these types.
 
