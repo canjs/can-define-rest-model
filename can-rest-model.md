@@ -338,7 +338,7 @@ However, if the `User` object's `identity` property is specified as follows:
 
 ```js
 const User = DefineMap.extend("User",{
-    id: "number",
+    id: {identity: true, type: "number"},
     name: "string"
 });
 ```
