@@ -306,7 +306,7 @@ If a todo like the following:
 var justin = new User({id: 20, name: "Justin"}),
     ramiya = new User({id: 21, name: "Ramiya"});
 
-var user = new User({
+var user = new Todo({
     id: 1,
     name: "mow lawn",
     complete: false,
