@@ -13,8 +13,11 @@ the following extends a `Todo` type
 with the ability to connect to a restful service layer:
 
 ```js
-import {TodoAll as Todo} from "//unpkg.com/can-demo-models@5";
+import {Todo, todoFixture} from "//unpkg.com/can-demo-models@5";
 import {restModel} from "can";
+
+// Creates a mock backend with 5 todos
+todoFixture(5);
 
 Todo.connection = restModel({
     Map: Todo,
@@ -22,6 +25,7 @@ Todo.connection = restModel({
     url: "/api/todos/{id}"
 });
 
+// Prints out all todo names
 Todo.getList().then(todos => {
     todos.forEach(todo => {
         console.log(todo.name);
@@ -305,7 +309,7 @@ let myTodo = new Todo({
 myTodo.subtasks[0].completed = true;
 myTodo.subtasks[0].save();
 
-// Reads the newly saved todo from the backend
+// Reads the newly saved todo from the backend and prints it's completed status
 Todo.getList().then(todos => console.log(todos[0].subtasks[0].completed));
 ```
   @highlight 10-12
@@ -528,17 +532,27 @@ Todo.connection = restModel({
 
 ### Manipulate service data
 
-The above allows one to retrieve, create, update, and destroy instances using
+The below code allows one to retrieve, create, update, and destroy instances using
 methods on `Todo` and instances of `Todo`:
 
 ```js
-import {TodoAll as Todo} from "//unpkg.com/can-demo-models@5";
+import {Todo, todoFixture} from "//unpkg.com/can-demo-models@5";
+import {restModel} from "can";
+
+// Creates a mock backend with 5 todos
+todoFixture(5);
+
+Todo.connection = restModel({
+    Map: Todo,
+    List: Todo.List,
+    url: "/api/todos/{id}"
+});
 
 // get a list of todos
 Todo.getList({filter: {complete: true}}) //-> Promise<Todo.List>
 
 // get a single todo
-Todo.get({id: 5}) //-> Promise<Todo>
+Todo.get({id: 4}) //-> Promise<Todo>
 
 // create a todo and persist it to the server:
 let todo = new Todo({name: "learn canjs", complete: false})
@@ -554,8 +568,6 @@ Todo.getList({filter: {complete: true}})
 
 // delete the todo on the server
 todo.destroy() //-> Promise<Todo>
-
-
 ```
 @codepen
 
