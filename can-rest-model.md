@@ -9,30 +9,24 @@ Connect a type to a restful service layer.
 
 `restModel` extends the provided `options.Map` type
 with the ability to connect to a restful service layer. For example,
-the following defines a `Todo` and `TodoList` type and extends them
+the following extends a `Todo` type
 with the ability to connect to a restful service layer:
 
 ```js
-import {DefineMap, DefineList, restModel} from "can";
-
-const Todo = DefineMap.extend("Todo",{
-    id: {type: "number", identity: true},
-    name: "string",
-    complete: "boolean"
-})
-
-Todo.List = DefineList.extend("TodoList",{
-    "#": Todo,
-    get completeCount(){
-        return this.filter({complete: true}).length;
-    }
-});
+import {TodoAll as Todo} from "//unpkg.com/can-demo-models@5";
+import {restModel} from "can";
 
 Todo.connection = restModel({
     Map: Todo,
     List: Todo.List,
     url: "/api/todos/{id}"
 });
+
+Todo.getList().then(todos => {
+    todos.forEach(todo => {
+        console.log(todo.name);
+    })
+})
 ```
   @codepen
 
@@ -221,7 +215,8 @@ makes updating the subtask easier.  The following makes it so calling a `subtask
 calls it's `todo`'s `.save()` method:
 
 ```js
-import {DefineMap, DefineList, restModel} from "can";
+import {DefineMap, DefineList, restModel} from "//unpkg.com/can@5/core.mjs";
+import {todoFixture} from "//unpkg.com/can-demo-models@5";
 
 // Model subtask
 const Subtask = DefineMap.extend("Subtask",{
@@ -260,7 +255,7 @@ Subtask.List = DefineList.extend("Subtasks",{
     parentTodo: {
         set(parentTodo){
             this.forEach(function(subtask){
-                subtask.parentTodo = subtask;
+                subtask.parentTodo = parentTodo;
             });
             return parentTodo;
         },
@@ -285,6 +280,33 @@ const Todo = DefineMap.extend("Todo",{
         this.complete = !this.complete;
     }
 });
+
+Todo.List = DefineList.extend("TodoList",{
+    "#": Todo,
+});
+
+// Sets up a can-fixture as the backend
+todoFixture(0);
+
+// Creates a restModel
+Todo.connection = restModel({
+    Map: Todo,
+    List: Todo.List,
+    url: "/api/todos/{id}"
+});
+
+// Creates a new todo with one subtask
+let myTodo = new Todo({
+    name: "learn canjs", completed: false,
+    subtasks: [{name: "learn js", completed: false}]
+});
+
+// Modifies and saves the subtask (thus saving the entire todo)
+myTodo.subtasks[0].completed = true;
+myTodo.subtasks[0].save();
+
+// Reads the newly saved todo from the backend
+Todo.getList().then(todos => console.log(todos[0].subtasks[0].completed));
 ```
   @highlight 10-12
   @codepen
@@ -510,6 +532,8 @@ The above allows one to retrieve, create, update, and destroy instances using
 methods on `Todo` and instances of `Todo`:
 
 ```js
+import {TodoAll as Todo} from "//unpkg.com/can-demo-models@5";
+
 // get a list of todos
 Todo.getList({filter: {complete: true}}) //-> Promise<Todo.List>
 
@@ -524,9 +548,16 @@ todo.save() //-> Promise<Todo>
 todo.complete = true;
 todo.save() //-> Promise<Todo>
 
+// prints out all complete todos including the new one
+Todo.getList({filter: {complete: true}})
+  .then(todos => todos.forEach(todo => console.log(todo.name)))
+
 // delete the todo on the server
 todo.destroy() //-> Promise<Todo>
+
+
 ```
+@codepen
 
 `restModel` also mixes in methods that let you know if the
 object is being saved, destroyed, or has already been created:
