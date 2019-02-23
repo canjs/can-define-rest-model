@@ -1,6 +1,7 @@
 @module {function} can-rest-model
 @parent can-data-modeling
 @collection can-core
+@package ./package.json
 @outline 2
 
 Connect a type to a restful service layer.
@@ -89,6 +90,37 @@ Todo.getList().then(todos => {
   type. This is built automatically from the `Map` if [can-define/map/map] is used.
 
 @return {connection} Returns a connection object.
+
+@signature `restModel(url)`
+
+Create a connection with just a url. Use this if you do not need to pass in any other `options` to configure the connection.
+
+For example, the following creates a `Todo` type with the ability to connect to a restful service layer:
+
+```js
+import {todoFixture} from "//unpkg.com/can-demo-models@5";
+import {restModel} from "can";
+
+// Creates a mock backend with 5 todos
+todoFixture(5);
+
+const Todo = restModel("/api/todos/{id}").Map;
+
+// Prints out all todo names
+Todo.getList().then(todos => {
+    todos.forEach(todo => {
+        console.log(todo.name);
+    })
+})
+```
+  @codepen
+
+@param {String} url The [can-connect/data/url/url.url] used to create, retrieve, update and
+  delete data.
+
+@return {connection} A connection that is the combination of the options and all the behaviors
+that `restModel` adds. The `connection` includes a `Map` property which is the type
+constructor function used to create instances of the raw record data retrieved from the server.
 
 @body
 
@@ -314,7 +346,7 @@ Todo.getList().then(todos => console.log(todos[0].subtasks[0].completed));
 ```
   @highlight 10-12
   @codepen
- 
+
 
 #### The identity property
 
