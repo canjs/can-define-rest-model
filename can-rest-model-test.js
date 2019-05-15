@@ -8,8 +8,8 @@ var canReflect = require("can-reflect");
 QUnit.module("can-realtime-rest-model");
 
 
-QUnit.test("CRUD basics", 10, function(assert){
-
+QUnit.test("CRUD basics", function(assert){
+    assert.expect(10);
     var Status = canReflect.assignSymbols({},{
         "can.new": function(val){
 
