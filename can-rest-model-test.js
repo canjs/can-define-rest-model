@@ -8,8 +8,8 @@ var canReflect = require("can-reflect");
 QUnit.module("can-realtime-rest-model");
 
 
-QUnit.test("CRUD basics", 10, function(assert){
-
+QUnit.test("CRUD basics", function(assert){
+    assert.expect(10);
     var Status = canReflect.assignSymbols({},{
         "can.new": function(val){
 
@@ -47,7 +47,7 @@ QUnit.test("CRUD basics", 10, function(assert){
         return function(req) {
 
             if(count++ === 0) {
-                QUnit.deepEqual(req.data, {foo:"bar", filter: "zed"});
+                assert.deepEqual(req.data, {foo:"bar", filter: "zed"});
                 return {
                     data: [{_id: 1,name: "zed"}]
                 };
@@ -76,7 +76,7 @@ QUnit.test("CRUD basics", 10, function(assert){
     });
 
     fixture("PUT /api/todos/{_id}", function(req){
-        QUnit.equal(req.data._id, "2");
+        assert.equal(req.data._id, "2");
         return {
             _id: 2,
             name: "do lawn care",
@@ -86,11 +86,11 @@ QUnit.test("CRUD basics", 10, function(assert){
     });
 
     fixture("DELETE /api/todos/{_id}", function(req){
-        QUnit.equal(req.data._id, "2", "deleted");
+        assert.equal(req.data._id, "2", "deleted");
         return {};
     });
 
-    QUnit.stop();
+    var done = assert.async();
 
 
 
@@ -122,7 +122,7 @@ QUnit.test("CRUD basics", 10, function(assert){
     // Test get
     .then(function(){
         return Todo.get({_id: 2}).then(function(todo){
-            QUnit.deepEqual(todo.serialize(), {
+            assert.deepEqual(todo.serialize(), {
                 _id: 2,
                 name: "lawn care",
                 status: "new",
@@ -133,10 +133,10 @@ QUnit.test("CRUD basics", 10, function(assert){
     })
     // update
     .then(function(todo){
-        QUnit.notOk(todo.isNew(), "is saved");
+        assert.notOk(todo.isNew(), "is saved");
         todo.status = "ASSIGNED";
         return todo.save().then(function(saved){
-            QUnit.deepEqual(saved.serialize(), {
+            assert.deepEqual(saved.serialize(), {
                 _id: 2,
                 name: "do lawn care",
                 status: "assigned",
@@ -150,10 +150,10 @@ QUnit.test("CRUD basics", 10, function(assert){
         return todo.destroy();
     })
     .then(function(){
-        QUnit.start();
+        done();
     },function(err){
-        QUnit.ok(false,err);
-        QUnit.start();
+        assert.ok(false,err);
+        done();
     });
 
 });
