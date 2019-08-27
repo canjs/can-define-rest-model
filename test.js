@@ -1,1 +1,1 @@
-import './can-rest-model-test';
+import './can-define-rest-model-test';

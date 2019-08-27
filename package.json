@@ -1,11 +1,11 @@
 {
-  "name": "can-rest-model",
+  "name": "can-define-rest-model",
   "version": "1.1.1",
   "description": "Connect a map to a rest connection",
   "homepage": "http://canjs.com",
   "repository": {
     "type": "git",
-    "url": "git://github.com/canjs/can-rest-model.git"
+    "url": "git://github.com/canjs/can-define-rest-model.git"
   },
   "author": {
     "name": "DoneJS Core Team",
@@ -27,7 +27,7 @@
     "build": "node build.js",
     "develop": "done-serve --static --develop --port 8080"
   },
-  "main": "can-rest-model",
+  "main": "can-define-rest-model",
   "keywords": [
     "canjs",
     "donejs",
