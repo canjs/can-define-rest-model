@@ -1,26 +1,26 @@
-@module {function} can-rest-model
+@module {function} can-define-rest-model
 @parent can-data-modeling
-@collection can-core
+@collection can-legacy
 @package ./package.json
 @outline 2
 
 Connect a type to a restful service layer.
 
-@signature `restModel(options)`
+@signature `defineRestModel(options)`
 
-`restModel` extends the provided `options.Map` type
+`defineRestModel` extends the provided `options.Map` type
 with the ability to connect to a restful service layer. For example,
 the following extends a `Todo` type
 with the ability to connect to a restful service layer:
 
 ```js
 import {Todo, todoFixture} from "//unpkg.com/can-demo-models@5";
-import {restModel} from "can";
+import {defineRestModel} from "can";
 
 // Creates a mock backend with 5 todos
 todoFixture(5);
 
-Todo.connection = restModel({
+Todo.connection = defineRestModel({
     Map: Todo,
     List: Todo.List,
     url: "/api/todos/{id}"
@@ -35,7 +35,7 @@ Todo.getList().then(todos => {
 ```
   @codepen
 
-`restModel` mixes in the following behaviors:
+`defineRestModel` mixes in the following behaviors:
 
 - [can-connect/constructor/constructor]
 - [can-connect/can/map/map]
@@ -91,7 +91,7 @@ Todo.getList().then(todos => {
 
 @return {connection} Returns a connection object.
 
-@signature `restModel(url)`
+@signature `defineRestModel(url)`
 
 Create a connection with just a url. Use this if you do not need to pass in any other `options` to configure the connection.
 
@@ -99,12 +99,12 @@ For example, the following creates a `Todo` type with the ability to connect to 
 
 ```js
 import {todoFixture} from "//unpkg.com/can-demo-models@5";
-import {restModel} from "can";
+import {defineRestModel} from "can";
 
 // Creates a mock backend with 5 todos
 todoFixture(5);
 
-const Todo = restModel("/api/todos/{id}").Map;
+const Todo = defineRestModel("/api/todos/{id}").Map;
 
 // Prints out all todo names
 Todo.getList().then(todos => {
@@ -119,22 +119,22 @@ Todo.getList().then(todos => {
   delete data.
 
 @return {connection} A connection that is the combination of the options and all the behaviors
-that `restModel` adds. The `connection` includes a `Map` property which is the type
+that `defineRestModel` adds. The `connection` includes a `Map` property which is the type
 constructor function used to create instances of the raw record data retrieved from the server.
 
 @body
 
 ## Use
 
-Use `restModel` to build a simple connection to a restful service
-layer. To use `restModel`, you:
+Use `defineRestModel` to build a simple connection to a restful service
+layer. To use `defineRestModel`, you:
 
 - Define data types to connect to the service layer
 - Configure the connection to the service layer
 - Use the types to manipulate service data
 
-`restModel` is the most
-basic built-in CanJS model layer. Check out [can-realtime-rest-model] for models that
+`defineRestModel` is the most
+basic built-in CanJS model layer. Check out [can-define-realtime-rest-model] for models that
 are able to:
 
 - Add and remove data from lists automatically
@@ -149,7 +149,7 @@ to hold and manipulate data on the server.  The following defines:
 - ` TodoList` type to represent a list of todos
 
 ```js
-import {DefineMap, DefineList, restModel} from "can";
+import {DefineMap, DefineList, defineRestModel} from "can";
 
 const Todo = DefineMap.extend("Todo",{
     id: {type: "number", identity: true},
@@ -251,7 +251,7 @@ makes updating the subtask easier.  The following makes it so calling a `subtask
 calls it's `todo`'s `.save()` method:
 
 ```js
-import {DefineMap, DefineList, restModel} from "//unpkg.com/can@5/core.mjs";
+import {DefineMap, DefineList, defineRestModel} from "//unpkg.com/can@5/core.mjs";
 import {todoFixture} from "//unpkg.com/can-demo-models@5";
 
 // Model subtask
@@ -324,8 +324,8 @@ Todo.List = DefineList.extend("TodoList",{
 // Sets up a can-fixture as the backend
 todoFixture(0);
 
-// Creates a restModel
-Todo.connection = restModel({
+// Creates a defineRestModel
+Todo.connection = defineRestModel({
     Map: Todo,
     List: Todo.List,
     url: "/api/todos/{id}"
@@ -350,7 +350,7 @@ Todo.getList().then(todos => console.log(todos[0].subtasks[0].completed));
 
 #### The identity property
 
-If you're specifying the identity property on nested data types, `restModel` will be able to
+If you're specifying the identity property on nested data types, `defineRestModel` will be able to
 intelligently merge data.  For example, say a `Todo` and its nested `User` type are defined as follows:
 
 ```js
@@ -429,7 +429,7 @@ If your service layer matches what CanJS expects, this configuration
 might be as simple as the following:
 
 ```js
-Todo.connection = restModel({
+Todo.connection = defineRestModel({
     Map: Todo,
     List: Todo.List,
     url: "/api/todos/{id}"
@@ -496,7 +496,7 @@ The `url` option can be configured with individual urls used to create, retrieve
 and delete data:
 
 ```js
-Todo.connection = restModel({
+Todo.connection = defineRestModel({
     Map: Todo,
     List: Todo.List,
     url: {
@@ -514,9 +514,9 @@ resolves to the expected data format.  The following makes `getListData` use
 `fetch` to request JSON data:
 
 ```js
-import { param, restModel } from "can";
+import { param, defineRestModel } from "can";
 
-Todo.connection = restModel({
+Todo.connection = defineRestModel({
     Map: Todo,
     List: Todo.List,
     url: {
@@ -552,7 +552,7 @@ to fix the formatting.  For example, if `GET /api/todos` returned data like:
 You could correct this with [can-connect/data/parse/parse.parseListProp] like:
 
 ```js
-Todo.connection = restModel({
+Todo.connection = defineRestModel({
     Map: Todo,
     List: Todo.List,
     url: "/api/todos/{id}",
@@ -569,12 +569,12 @@ methods on `Todo` and instances of `Todo`:
 
 ```js
 import {Todo, todoFixture} from "//unpkg.com/can-demo-models@5";
-import {restModel} from "can";
+import {defineRestModel} from "can";
 
 // Creates a mock backend with 5 todos
 todoFixture(5);
 
-Todo.connection = restModel({
+Todo.connection = defineRestModel({
     Map: Todo,
     List: Todo.List,
     url: "/api/todos/{id}"
@@ -603,7 +603,7 @@ todo.destroy() //-> Promise<Todo>
 ```
 @codepen
 
-`restModel` also mixes in methods that let you know if the
+`defineRestModel` also mixes in methods that let you know if the
 object is being saved, destroyed, or has already been created:
 
 - [can-connect/can/map/map.prototype.isSaving]
@@ -625,7 +625,7 @@ update:
 <button disabled:from="todo.isSaving()">Update</button>
 ```
 
-`restModel` also makes the type and instances of the type emit events when items
+`defineRestModel` also makes the type and instances of the type emit events when items
 are created, updated or destroyed:
 
 ```js

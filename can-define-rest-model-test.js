@@ -2,10 +2,10 @@ var QUnit = require("steal-qunit");
 var fixture = require("can-fixture");
 var DefineMap = require("can-define/map/map");
 var DefineList = require("can-define/list/list");
-var restModel = require("./can-rest-model");
+var defineRestModel = require("./can-define-rest-model");
 var canReflect = require("can-reflect");
 
-QUnit.module("can-realtime-rest-model");
+QUnit.module("can-define-realtime-rest-model");
 
 
 QUnit.test("CRUD basics", function(assert){
@@ -35,7 +35,7 @@ QUnit.test("CRUD basics", function(assert){
         "#": Todo
     });
 
-    restModel({
+    defineRestModel({
         Map: Todo,
         List: TodoList,
         url: "/api/todos/{_id}"
@@ -159,7 +159,7 @@ QUnit.test("CRUD basics", function(assert){
 });
 
 QUnit.test("string signature", function(assert) {
-    var connection = restModel("/api/todos/{_id}");
+    var connection = defineRestModel("/api/todos/{_id}");
 
     assert.ok(new connection.Map() instanceof DefineMap, "Map defined");
     assert.ok(new connection.List() instanceof DefineList, "List defined");

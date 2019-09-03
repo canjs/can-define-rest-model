@@ -7,7 +7,7 @@ var DefineMap = require("can-define/map/map");
 var namespace = require("can-namespace");
 var base = require("can-connect/base/base");
 
-function restModel(optionsOrUrl) {
+function defineRestModel(optionsOrUrl) {
 
 	// If optionsOrUrl is a string, make options = {url: optionsOrUrl}
 	var options = (typeof optionsOrUrl === "string") ? {url: optionsOrUrl} : optionsOrUrl;
@@ -27,4 +27,4 @@ function restModel(optionsOrUrl) {
 	return connection;
 }
 
-module.exports = namespace.restModel = restModel;
+module.exports = namespace.defineRestModel = defineRestModel;
